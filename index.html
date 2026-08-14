@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7eef2">
+    <title>Yuki-chan's Blessings</title>
+    <link id="themeStylesheet" rel="stylesheet" href="style-sakura-sky.css">
+</head>
+<body>
+    <div class="page-glow page-glow-left" aria-hidden="true"></div>
+    <div class="page-glow page-glow-right" aria-hidden="true"></div>
+
+    <div class="sakura-canopy canopy-left" aria-hidden="true">
+        <span class="branch branch-a"></span>
+        <span class="branch branch-b"></span>
+        <span class="blossom b1">✿</span>
+        <span class="blossom b2">✿</span>
+        <span class="blossom b3">✿</span>
+        <span class="blossom b4">✿</span>
+        <span class="blossom b5">✿</span>
+        <span class="blossom b6">✿</span>
+    </div>
+
+    <div class="sakura-canopy canopy-right" aria-hidden="true">
+        <span class="branch branch-a"></span>
+        <span class="branch branch-b"></span>
+        <span class="blossom b1">✿</span>
+        <span class="blossom b2">✿</span>
+        <span class="blossom b3">✿</span>
+        <span class="blossom b4">✿</span>
+        <span class="blossom b5">✿</span>
+        <span class="blossom b6">✿</span>
+    </div>
+
+    <div class="sakura-container" id="sakura" aria-hidden="true"></div>
+    <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
+
+    <div class="theme-picker">
+        <label for="themeSelect">Palette</label>
+        <select id="themeSelect" aria-label="Choose a color palette">
+            <option value="style-sakura-sky.css">Sakura Sky · Pink + Blue</option>
+            <option value="style-sage-garden.css">Sage Garden · Neutral Green</option>
+            <option value="style-champagne.css">Warm Champagne · Neutral Gold</option>
+        </select>
+    </div>
+
+    <main class="card" aria-label="Yuki-chan blessing dispenser">
+        <div class="screen-progress" aria-label="Three blessing pages">
+            <span class="progress-dot active" data-page="1">1</span>
+            <span class="progress-line"></span>
+            <span class="progress-dot" data-page="2">2</span>
+            <span class="progress-line"></span>
+            <span class="progress-dot" data-page="3">3</span>
+        </div>
+
+        <!-- PAGE 1: WELCOME -->
+        <section class="screen active" id="screen1" aria-labelledby="welcomeTitle">
+            <div class="torii-mark" aria-hidden="true">⛩</div>
+            <span class="eyebrow">Welcome to</span>
+            <h1 id="welcomeTitle">Baby Yuki</h1>
+            <div class="japanese-sub">ユキちゃん</div>
+            <div class="ornament" aria-hidden="true"><span></span>✿<span></span></div>
+
+            <p class="lead">
+                A precious little adventure is on the way.<br>
+                Our hearts are already full of wishes for you, little one.
+            </p>
+
+            <div class="mini-wishes" aria-label="A preview of the blessings">
+                <span>Love</span>
+                <span>Health</span>
+                <span>Joy</span>
+            </div>
+
+            <button class="btn btn-primary" type="button" onclick="goToScreen(2)">
+                Open the Blessing Dispenser <span aria-hidden="true">›</span>
+            </button>
+        </section>
+
+        <!-- PAGE 2: INTERACTIVE BLESSING DISPENSER -->
+        <section class="screen" id="screen2" aria-labelledby="blessingsTitle">
+            <span class="eyebrow">祝福 · Shukufuku</span>
+            <h2 id="blessingsTitle">Blessings for Yuki-chan</h2>
+            <p class="intro-copy">
+                Draw three blessings for the little one. Each wish is chosen at random and will be saved for the final page.
+            </p>
+
+            <div class="draw-counter" id="drawCounter">0 of 3 blessings collected</div>
+
+            <div class="blessing-dispenser">
+                <div class="dispenser-top" aria-hidden="true">
+                    <span class="dispenser-flower">✿</span>
+                </div>
+
+                <div class="blessing-card idle" id="blessingCard" aria-live="polite">
+                    <div class="blessing-symbol" id="blessingSymbol" aria-hidden="true">✦</div>
+                    <div class="blessing-category" id="blessingCategory">Your blessing awaits</div>
+                    <h3 id="blessingName">Tap the button below</h3>
+                    <p id="blessingText">A wish of love, health, happiness, and possibility is waiting to be discovered.</p>
+                </div>
+
+                <button class="btn btn-primary" id="drawButton" type="button" onclick="drawBlessing()">
+                    Receive a Blessing
+                </button>
+            </div>
+
+            <div class="collected-dots" id="collectedDots" aria-label="Collected blessings">
+                <span></span><span></span><span></span>
+            </div>
+
+            <button class="btn btn-secondary hidden" id="finalPageButton" type="button" onclick="goToScreen(3)">
+                See Your Three Blessings <span aria-hidden="true">›</span>
+            </button>
+
+            <button class="text-button" type="button" onclick="goToScreen(1)">Back to welcome</button>
+        </section>
+
+        <!-- PAGE 3: FINAL BLESSINGS -->
+        <section class="screen" id="screen3" aria-labelledby="finalTitle">
+            <span class="eyebrow">待ち遠しい日々</span>
+            <div class="script-heading">We cannot wait to meet you</div>
+            <h2 id="finalTitle">Yuki-chan</h2>
+            <div class="ornament" aria-hidden="true"><span></span>✿<span></span></div>
+
+            <p class="final-intro">
+                You are already so loved, so celebrated, and surrounded by beautiful hopes before we even meet you.
+            </p>
+
+            <div class="final-blessings" id="finalBlessings" aria-live="polite"></div>
+
+            <div class="final-message">
+                <span class="jp-final">愛をこめて、ユキちゃん</span>
+                <strong>With all our love, Yuki-chan.</strong>
+                <p>May your story be filled with wonder, kindness, laughter, and a lifetime of people cheering you on.</p>
+            </div>
+
+            <div class="final-actions">
+                <button class="btn btn-primary" type="button" onclick="restartBlessings()">Draw New Blessings</button>
+                <button class="btn btn-secondary" type="button" onclick="goToScreen(1)">Welcome Page</button>
+            </div>
+        </section>
+    </main>
+
+    <div class="fuji-scene" aria-hidden="true">
+        <svg viewBox="0 0 1000 260" preserveAspectRatio="none" role="presentation">
+            <path class="distant-hills" d="M0 210 C110 155, 180 180, 285 145 C390 110, 435 165, 530 135 C655 92, 735 170, 835 135 C900 112, 945 130, 1000 115 L1000 260 L0 260 Z"></path>
+            <path class="fuji-body" d="M80 260 L365 125 L455 46 L530 88 L600 132 L920 260 Z"></path>
+            <path class="fuji-snow" d="M455 46 L408 98 L435 92 L455 112 L478 88 L500 103 L530 88 Z"></path>
+            <path class="shore" d="M0 235 C170 219, 340 247, 510 229 C660 214, 825 246, 1000 222 L1000 260 L0 260 Z"></path>
+        </svg>
+    </div>
+
+    <script>
+        const blessings = [
+            { name: 'Abundant Love', category: '愛 · Love', symbol: '♡', text: 'May your life be filled with unconditional love, gentle warmth, and people who make you feel at home.' },
+            { name: 'Good Health', category: '健康 · Health', symbol: '✚', text: 'May you grow with strength, steady energy, restful days, and a joyful heart.' },
+            { name: 'Prosperity', category: '繁栄 · Prosperity', symbol: '✦', text: 'May your journey be rich with opportunity, meaningful success, and enough to share with others.' },
+            { name: 'Everyday Joy', category: '喜び · Joy', symbol: '☀', text: 'May ordinary days surprise you with laughter, delight, and small reasons to celebrate.' },
+            { name: 'Curiosity', category: '好奇心 · Curiosity', symbol: '⌁', text: 'May you always ask questions, explore freely, and find wonder in how the world works.' },
+            { name: 'Courage', category: '勇気 · Courage', symbol: '◇', text: 'May you trust yourself when the path feels new and find courage whenever you need it.' },
+            { name: 'Kindness', category: '優しさ · Kindness', symbol: '❀', text: 'May kindness guide your words, your choices, and the way you treat both yourself and others.' },
+            { name: 'True Friendship', category: '友情 · Friendship', symbol: '∞', text: 'May you find loyal friends who laugh with you, grow with you, and make life brighter.' },
+            { name: 'Peace', category: '平和 · Peace', symbol: '◌', text: 'May you carry calm within you and always have safe places where your heart can rest.' },
+            { name: 'Hope', category: '希望 · Hope', symbol: '✧', text: 'May hope stay close through every season and remind you that tomorrow can hold something beautiful.' },
+            { name: 'Wonder', category: '驚き · Wonder', symbol: '☆', text: 'May you never outgrow the magic of discovering something for the very first time.' },
+            { name: 'Resilience', category: '強さ · Resilience', symbol: '△', text: 'May you bend without breaking, learn from difficult days, and rise with new strength.' },
+            { name: 'Creativity', category: '創造 · Creativity', symbol: '✎', text: 'May your imagination stay bright and give you endless ways to make, dream, and express yourself.' },
+            { name: 'Adventure', category: '冒険 · Adventure', symbol: '⌂', text: 'May your life hold memorable journeys, unexpected discoveries, and stories worth retelling.' },
+            { name: 'Belonging', category: '絆 · Belonging', symbol: '◎', text: 'May you always know there are people and places where you are welcomed exactly as you are.' },
+            { name: 'Wisdom', category: '知恵 · Wisdom', symbol: '◈', text: 'May experience teach you gently, and may you grow into someone who listens, learns, and understands.' },
+            { name: 'Confidence', category: '自信 · Confidence', symbol: '▲', text: 'May you know your worth, speak with confidence, and trust the person you are becoming.' },
+            { name: 'Compassion', category: '思いやり · Compassion', symbol: '♥', text: 'May you notice when others need care and keep a soft heart without losing your own strength.' },
+            { name: 'Gratitude', category: '感謝 · Gratitude', symbol: '❋', text: 'May you notice the good around you and carry gratitude for the people, places, and moments that matter.' },
+            { name: 'Laughter', category: '笑顔 · Laughter', symbol: '☺', text: 'May your home and your friendships be filled with the kind of laughter that makes everyone join in.' },
+            { name: 'Patience', category: '忍耐 · Patience', symbol: '○', text: 'May you give good things time to grow and give yourself grace while you are learning.' },
+            { name: 'Generosity', category: '寛大さ · Generosity', symbol: '◍', text: 'May you have enough to give freely—your time, your care, your attention, and your joy.' },
+            { name: 'Bright Dreams', category: '夢 · Dreams', symbol: '☾', text: 'May your dreams be bold enough to excite you and flexible enough to grow as you do.' },
+            { name: 'Discovery', category: '発見 · Discovery', symbol: '✣', text: 'May the world keep opening new doors for you, with something interesting waiting behind each one.' },
+            { name: 'Harmony', category: '調和 · Harmony', symbol: '≈', text: 'May you find a beautiful balance between adventure and rest, ambition and contentment, giving and receiving.' },
+            { name: 'Warmth', category: '温もり · Warmth', symbol: '⌾', text: 'May your days be warmed by affection, good conversations, shared meals, and people who care deeply.' },
+            { name: 'Playfulness', category: '遊び心 · Playfulness', symbol: '✿', text: 'May you always leave room for silliness, games, imagination, and fun for no reason at all.' },
+            { name: 'Opportunity', category: '機会 · Opportunity', symbol: '↗', text: 'May doors open at the right moments and may you have the courage to walk through the ones that feel right.' },
+            { name: 'Serenity', category: '安らぎ · Serenity', symbol: '∿', text: 'May you find quiet moments that restore you and a steady sense of peace wherever life takes you.' },
+            { name: 'Family Bonds', category: '家族 · Family', symbol: '⌂', text: 'May family be a source of comfort, celebration, guidance, and unconditional support throughout your life.' },
+            { name: 'A Bright Future', category: '未来 · Future', symbol: '✺', text: 'May the future meet you with possibility, meaningful choices, and countless chances to become who you wish to be.' },
+            { name: 'Gentle Strength', category: '強さ · Strength', symbol: '❖', text: 'May you grow strong without losing tenderness, and brave without losing kindness.' },
+            { name: 'A Life of Stories', category: '物語 · Stories', symbol: '☁', text: 'May your life collect beautiful stories—some planned, some surprising, and all uniquely yours.' },
+            { name: 'Guiding Light', category: '光 · Light', symbol: '✷', text: 'May you find light when things feel uncertain and become a source of light for others in return.' },
+            { name: 'Open Horizons', category: '世界 · Horizons', symbol: '⌇', text: 'May you see a wide world of possibilities and always feel free to choose the path that fits you best.' },
+            { name: 'Meaningful Success', category: '成功 · Success', symbol: '◆', text: 'May success mean more than achievement—may it include purpose, balance, good people, and a life you enjoy living.' }
+        ];
+
+        const themeSelect = document.getElementById('themeSelect');
+        const themeStylesheet = document.getElementById('themeStylesheet');
+        const blessingCard = document.getElementById('blessingCard');
+        const blessingCategory = document.getElementById('blessingCategory');
+        const blessingName = document.getElementById('blessingName');
+        const blessingText = document.getElementById('blessingText');
+        const blessingSymbol = document.getElementById('blessingSymbol');
+        const drawButton = document.getElementById('drawButton');
+        const drawCounter = document.getElementById('drawCounter');
+        const finalPageButton = document.getElementById('finalPageButton');
+        const finalBlessings = document.getElementById('finalBlessings');
+        const collectedDots = Array.from(document.querySelectorAll('#collectedDots span'));
+
+        let remainingBlessings = [...blessings];
+        let collectedBlessings = [];
+        let isDrawing = false;
+
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(`screen${screenNumber}`).classList.add('active');
+
+            document.querySelectorAll('.progress-dot').forEach(dot => {
+                dot.classList.toggle('active', Number(dot.dataset.page) <= screenNumber);
+            });
+
+            if (screenNumber === 3) {
+                renderFinalBlessings();
+                createCelebrationBurst(window.innerWidth / 2, window.innerHeight * 0.35, 26);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function drawBlessing() {
+            if (isDrawing || collectedBlessings.length >= 3) return;
+            isDrawing = true;
+            drawButton.disabled = true;
+            blessingCard.classList.remove('reveal');
+            blessingCard.classList.add('drawing');
+            blessingCategory.textContent = 'Choosing a blessing…';
+            blessingName.textContent = '✿ ✿ ✿';
+            blessingText.textContent = 'A little wish is finding its way to Yuki-chan.';
+            blessingSymbol.textContent = '✦';
+
+            setTimeout(() => {
+                const index = Math.floor(Math.random() * remainingBlessings.length);
+                const chosen = remainingBlessings.splice(index, 1)[0];
+                collectedBlessings.push(chosen);
+
+                blessingCategory.textContent = chosen.category;
+                blessingName.textContent = chosen.name;
+                blessingText.textContent = chosen.text;
+                blessingSymbol.textContent = chosen.symbol;
+                blessingCard.classList.remove('idle', 'drawing');
+                blessingCard.classList.add('reveal');
+
+                updateCollectionUI();
+                createCelebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 14);
+
+                if (navigator.vibrate) navigator.vibrate(30);
+                isDrawing = false;
+                drawButton.disabled = collectedBlessings.length >= 3;
+            }, 720);
+        }
+
+        function updateCollectionUI() {
+            const count = collectedBlessings.length;
+            drawCounter.textContent = `${count} of 3 blessings collected`;
+            collectedDots.forEach((dot, index) => dot.classList.toggle('filled', index < count));
+
+            if (count < 3) {
+                drawButton.textContent = count === 0 ? 'Receive a Blessing' : 'Draw Another Blessing';
+            } else {
+                drawButton.textContent = 'Three Blessings Collected';
+                finalPageButton.classList.remove('hidden');
+            }
+        }
+
+        function renderFinalBlessings() {
+            finalBlessings.innerHTML = '';
+
+            if (collectedBlessings.length === 0) {
+                const fallback = blessings.slice(0, 3);
+                fallback.forEach(blessing => finalBlessings.appendChild(createFinalBlessingCard(blessing)));
+                return;
+            }
+
+            collectedBlessings.forEach(blessing => {
+                finalBlessings.appendChild(createFinalBlessingCard(blessing));
+            });
+        }
+
+        function createFinalBlessingCard(blessing) {
+            const item = document.createElement('article');
+            item.className = 'final-blessing-item';
+            item.innerHTML = `
+                <div class="final-symbol" aria-hidden="true">${blessing.symbol}</div>
+                <div>
+                    <span>${blessing.category}</span>
+                    <h3>${blessing.name}</h3>
+                    <p>${blessing.text}</p>
+                </div>
+            `;
+            return item;
+        }
+
+        function restartBlessings() {
+            remainingBlessings = [...blessings];
+            collectedBlessings = [];
+            blessingCategory.textContent = 'Your blessing awaits';
+            blessingName.textContent = 'Tap the button below';
+            blessingText.textContent = 'A wish of love, health, happiness, and possibility is waiting to be discovered.';
+            blessingSymbol.textContent = '✦';
+            blessingCard.className = 'blessing-card idle';
+            drawButton.disabled = false;
+            drawButton.textContent = 'Receive a Blessing';
+            finalPageButton.classList.add('hidden');
+            updateCollectionUI();
+            goToScreen(2);
+        }
+
+        function createPetals() {
+            const sakuraContainer = document.getElementById('sakura');
+            const petalCount = window.matchMedia('(max-width: 600px)').matches ? 14 : 24;
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('span');
+                petal.className = 'petal';
+                const size = Math.random() * 9 + 7;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size * 1.25}px`;
+                petal.style.left = `${Math.random() * 100}%`;
+                petal.style.animationDuration = `${Math.random() * 7 + 7}s`;
+                petal.style.animationDelay = `${Math.random() * -12}s`;
+                petal.style.setProperty('--drift', `${Math.random() * 120 - 60}px`);
+                sakuraContainer.appendChild(petal);
+            }
+        }
+
+        function createCelebrationBurst(x, y, count = 12) {
+            const layer = document.getElementById('celebrationLayer');
+            const symbols = ['✿', '✦', '•', '♡'];
+
+            for (let i = 0; i < count; i++) {
+                const piece = document.createElement('span');
+                piece.className = 'burst-piece';
+                piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                piece.style.left = `${x}px`;
+                piece.style.top = `${y}px`;
+                piece.style.setProperty('--x', `${(Math.random() - 0.5) * 320}px`);
+                piece.style.setProperty('--y', `${(Math.random() - 0.65) * 260}px`);
+                piece.style.setProperty('--r', `${Math.random() * 540 - 270}deg`);
+                piece.style.animationDelay = `${Math.random() * 0.12}s`;
+                layer.appendChild(piece);
+                setTimeout(() => piece.remove(), 1400);
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('yuki-blessing-theme');
+            const validThemes = Array.from(themeSelect.options).map(option => option.value);
+            if (savedTheme && validThemes.includes(savedTheme)) {
+                themeStylesheet.href = savedTheme;
+                themeSelect.value = savedTheme;
+            }
+        }
+
+        themeSelect.addEventListener('change', event => {
+            const selectedTheme = event.target.value;
+            themeStylesheet.href = selectedTheme;
+            localStorage.setItem('yuki-blessing-theme', selectedTheme);
+        });
+
+        loadTheme();
+        createPetals();
+        updateCollectionUI();
+    </script>
+</body>
+</html>
