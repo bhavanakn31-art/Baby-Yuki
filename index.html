@@ -215,38 +215,88 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function drawBlessing() {
-            if (isDrawing || collectedBlessings.length >= 3) return;
-            isDrawing = true;
-            drawButton.disabled = true;
-            blessingCard.classList.remove('reveal');
-            blessingCard.classList.add('drawing');
-            blessingCategory.textContent = 'Choosing a blessing…';
-            blessingName.textContent = '✿ ✿ ✿';
-            blessingText.textContent = 'A little wish is finding its way to Yuki-chan.';
-            blessingSymbol.textContent = '✦';
+    function drawBlessing() {
+    if (isDrawing || collectedBlessings.length >= 3) return;
 
-            setTimeout(() => {
-                const index = Math.floor(Math.random() * remainingBlessings.length);
-                const chosen = remainingBlessings.splice(index, 1)[0];
-                collectedBlessings.push(chosen);
+    isDrawing = true;
+    drawButton.disabled = true;
 
-                blessingCategory.textContent = chosen.category;
-                blessingName.textContent = chosen.name;
-                blessingText.textContent = chosen.text;
-                blessingSymbol.textContent = chosen.symbol;
-                blessingCard.classList.remove('idle', 'drawing');
-                blessingCard.classList.add('reveal');
+    blessingCard.classList.remove('reveal');
+    blessingCard.classList.add('drawing');
 
-                updateCollectionUI();
-                createCelebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 14);
+    blessingCategory.textContent = 'Choosing a blessing…';
+    blessingName.textContent = '✿ ✿ ✿';
+    blessingText.textContent = 'A little wish is finding its way to Yuki-chan.';
+    blessingSymbol.textContent = '✦';
 
-                if (navigator.vibrate) navigator.vibrate(30);
-                isDrawing = false;
-                drawButton.disabled = collectedBlessings.length >= 3;
-            }, 720);
+    window.setTimeout(() => {
+        try {
+            /* Safety reset in case the available pool is ever empty */
+            if (remainingBlessings.length === 0) {
+                remainingBlessings = [...blessings];
+            }
+
+            const index = Math.floor(
+                Math.random() * remainingBlessings.length
+            );
+
+            const chosen = remainingBlessings.splice(index, 1)[0];
+
+            collectedBlessings.push(chosen);
+
+            /* Put the actual blessing on screen */
+            blessingCategory.textContent = chosen.category;
+            blessingName.textContent = chosen.name;
+            blessingText.textContent = chosen.text;
+            blessingSymbol.textContent = chosen.symbol;
+
+            /* Restart reveal animation */
+            blessingCard.classList.remove(
+                'idle',
+                'drawing',
+                'reveal'
+            );
+
+            void blessingCard.offsetWidth;
+
+            blessingCard.classList.add('reveal');
+
+            updateCollectionUI();
+
+            /* Decorative effects should never prevent
+               the blessing from working */
+            try {
+                createCelebrationBurst(
+                    window.innerWidth / 2,
+                    window.innerHeight / 2,
+                    14
+                );
+            } catch (effectError) {
+                console.warn(
+                    'Celebration effect skipped:',
+                    effectError
+                );
+            }
+
+            if (
+                typeof navigator.vibrate === 'function'
+            ) {
+                navigator.vibrate(30);
+            }
+
+        } catch (error) {
+            console.error('Blessing draw failed:', error);
+
+        } finally {
+            /* This always runs, even if another part fails */
+            isDrawing = false;
+
+            drawButton.disabled =
+                collectedBlessings.length >= 3;
         }
 
+    }, 500);
+}
         function updateCollectionUI() {
             const count = collectedBlessings.length;
             drawCounter.textContent = `${count} of 3 blessings collected`;
@@ -305,7 +355,7 @@
 
         function createPetals() {
             const sakuraContainer = document.getElementById('sakura');
-            const petalCount = 38;
+            const petalCount =48;
 
             for (let i = 0; i < petalCount; i++) {
                 const petal = document.createElement('span');
@@ -316,9 +366,11 @@
 
                 // Keep most petals in the central mobile content lane so they visibly
                 // pass over the blessing description panel, while some still frame the edges.
-                const centralLane = i < Math.round(petalCount * 0.72);
+                const centralLane =
+                    i < Math.round(petalCount * 0.82);
+
                 const left = centralLane
-                    ? 12 + Math.random() * 76
+                    ? 8 + Math.random() * 84
                     : Math.random() * 100;
                 petal.style.left = `${left}%`;
 
