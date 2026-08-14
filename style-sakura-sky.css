@@ -151,11 +151,27 @@ button { -webkit-tap-highlight-color: transparent; }
     position: absolute;
     top: -30px;
     display: block;
-    background: linear-gradient(145deg, var(--petal-light), var(--petal));
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--petal-light),
+            var(--petal)
+        );
+
     border-radius: 80% 15% 75% 20%;
-    opacity: 0.72;
+
+    /* More opaque because these are foreground petals */
+    opacity: 0.88;
+
     animation: petalFall linear infinite;
-    box-shadow: 0 1px 3px rgba(92, 61, 76, 0.1);
+
+    box-shadow:
+        0 2px 5px rgba(92, 61, 76, 0.16);
+
+    /* Helps Safari keep these in the foreground layer */
+    transform: translateZ(0);
+    will-change: transform;
 }
 @keyframes petalFall {
     0% { transform: translate3d(0, -8vh, 0) rotate(0deg); opacity: 0; }
@@ -583,20 +599,144 @@ h3 { margin-bottom: 8px; font-size: 1.7rem; }
 }
 
 @media (max-width: 720px) {
-    body { padding: 78px 12px 70px; align-items: flex-start; }
-    .card { width: 100%; min-height: 610px; padding: 35px 19px 30px; border-radius: 24px; }
-    .theme-picker { left: 50%; right: auto; transform: translateX(-50%); top: 14px; width: calc(100% - 28px); justify-content: center; }
-    .theme-picker select { max-width: 230px; }
-    .sakura-canopy { width: 250px; height: 160px; opacity: 0.72; }
-    .canopy-left { left: -90px; }
-    .canopy-right { right: -90px; }
-    .branch-a { width: 215px; }
-    .branch-b { width: 170px; }
-    .b4, .b5, .b6 { display: none; }
-    .blessing-dispenser { padding: 14px; }
-    .blessing-card { min-height: 260px; padding: 23px 18px; }
-    .final-blessing-item { grid-template-columns: 48px 1fr; gap: 11px; padding: 12px; }
-    .final-symbol { width: 44px; height: 44px; }
+
+    html,
+    body {
+        width: 100%;
+        min-height: 100%;
+    }
+
+    body {
+        min-height: 100dvh;
+        padding:
+            max(18px, env(safe-area-inset-top))
+            10px
+            max(34px, env(safe-area-inset-bottom));
+
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    /* Tall mobile invitation-style card */
+    .card {
+        width: 100%;
+        min-height: calc(
+            100dvh -
+            max(36px, env(safe-area-inset-top))
+        );
+
+        padding: 72px 16px 38px;
+        border-radius: 24px;
+    }
+
+    /*
+       Let the Sakura tree enter the card visually.
+       It is intentionally ABOVE the card.
+    */
+    .sakura-canopy {
+        width: 280px;
+        height: 185px;
+        opacity: 0.96;
+        z-index: 40;
+    }
+
+    .canopy-left {
+        left: -95px;
+        top: -13px;
+    }
+
+    .canopy-right {
+        right: -120px;
+        top: 20px;
+        opacity: 0.66;
+    }
+
+    .branch-a {
+        width: 235px;
+    }
+
+    .branch-b {
+        width: 185px;
+    }
+
+    /*
+       Do not hide as many blossoms on mobile.
+       The flowers help create the foreground frame.
+    */
+    .b5,
+    .b6 {
+        display: none;
+    }
+
+    .screen-progress {
+        margin-bottom: 23px;
+    }
+
+    h1 {
+        font-size: clamp(3.3rem, 17vw, 4.6rem);
+    }
+
+    h2 {
+        font-size: clamp(2.35rem, 11vw, 3.2rem);
+    }
+
+    .lead,
+    .intro-copy,
+    .final-intro {
+        line-height: 1.7;
+    }
+
+    .blessing-dispenser {
+        width: 100%;
+        padding: 13px;
+        border-radius: 23px;
+    }
+
+    .blessing-card {
+        min-height: 225px;
+        padding: 21px 16px;
+        border-radius: 18px;
+    }
+
+    /*
+       Petals are deliberately visible over the card.
+    */
+    .sakura-container {
+        z-index: 60;
+    }
+
+    .petal {
+        opacity: 0.88;
+        box-shadow:
+            0 2px 4px rgba(92, 61, 76, 0.12);
+    }
+
+    /* Keep Fuji toward the bottom rather than
+       consuming too much vertical space */
+    .fuji-scene {
+        height: 20vh;
+        max-height: 180px;
+        opacity: 0.62;
+    }
+
+    .final-blessing-item {
+        grid-template-columns: 46px 1fr;
+        gap: 10px;
+        padding: 11px;
+    }
+
+    .final-symbol {
+        width: 42px;
+        height: 42px;
+    }
+
+    .final-actions {
+        width: 100%;
+    }
+
+    .final-actions .btn {
+        width: 100%;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
