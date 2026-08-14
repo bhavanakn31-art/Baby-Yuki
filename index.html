@@ -215,100 +215,169 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-    function drawBlessing() {
-    if (isDrawing || collectedBlessings.length >= 3) return;
-
-    isDrawing = true;
-    drawButton.disabled = true;
-
-    blessingCard.classList.remove('reveal');
-    blessingCard.classList.add('drawing');
-
-    blessingCategory.textContent = 'Choosing a blessing…';
-    blessingName.textContent = '✿ ✿ ✿';
-    blessingText.textContent = 'A little wish is finding its way to Yuki-chan.';
-    blessingSymbol.textContent = '✦';
-
-    window.setTimeout(() => {
-        try {
-            /* Safety reset in case the available pool is ever empty */
-            if (remainingBlessings.length === 0) {
-                remainingBlessings = [...blessings];
-            }
-
-            const index = Math.floor(
-                Math.random() * remainingBlessings.length
-            );
-
-            const chosen = remainingBlessings.splice(index, 1)[0];
-
-            collectedBlessings.push(chosen);
-
-            /* Put the actual blessing on screen */
-            blessingCategory.textContent = chosen.category;
-            blessingName.textContent = chosen.name;
-            blessingText.textContent = chosen.text;
-            blessingSymbol.textContent = chosen.symbol;
-
-            /* Restart reveal animation */
-            blessingCard.classList.remove(
-                'idle',
-                'drawing',
-                'reveal'
-            );
-
-            void blessingCard.offsetWidth;
-
-            blessingCard.classList.add('reveal');
-
-            updateCollectionUI();
-
-            /* Decorative effects should never prevent
-               the blessing from working */
+     function drawBlessing() {
+        if (isDrawing || collectedBlessings.length >= 3) return;
+    
+        isDrawing = true;
+        drawButton.disabled = true;
+    
+        blessingCard.classList.remove('reveal');
+        blessingCard.classList.add('drawing');
+    
+        blessingCategory.textContent = 'Choosing a blessing…';
+        blessingName.textContent = '✿ ✿ ✿';
+        blessingText.textContent =
+            'A little wish is finding its way to Yuki-chan.';
+        blessingSymbol.textContent = '✦';
+    
+        window.setTimeout(() => {
             try {
-                createCelebrationBurst(
-                    window.innerWidth / 2,
-                    window.innerHeight / 2,
-                    14
+                // Safety: refill the pool if necessary
+                if (remainingBlessings.length === 0) {
+                    remainingBlessings = [...blessings];
+                }
+    
+                const index = Math.floor(
+                    Math.random() * remainingBlessings.length
                 );
-            } catch (effectError) {
-                console.warn(
-                    'Celebration effect skipped:',
-                    effectError
+    
+                const chosen =
+                    remainingBlessings.splice(index, 1)[0];
+    
+                if (!chosen) {
+                    throw new Error('No blessing was selected.');
+                }
+    
+                collectedBlessings.push(chosen);
+    
+                // Show the actual blessing
+                blessingCategory.textContent = chosen.category;
+                blessingName.textContent = chosen.name;
+                blessingText.textContent = chosen.text;
+                blessingSymbol.textContent = chosen.symbol;
+    
+                blessingCard.classList.remove(
+                    'idle',
+                    'drawing',
+                    'reveal'
                 );
+    
+                // Force animation restart
+                void blessingCard.offsetWidth;
+    
+                blessingCard.classList.add('reveal');
+    
+                updateCollectionUI();
+    
+                // Celebration is decorative only.
+                // It must never break the blessing flow.
+                try {
+                    createCelebrationBurst(
+                        window.innerWidth / 2,
+                        window.innerHeight / 2,
+                        14
+                    );
+                } catch (effectError) {
+                    console.warn(
+                        'Celebration animation failed:',
+                        effectError
+                    );
+                }
+    
+                try {
+                    if (
+                        typeof navigator.vibrate === 'function'
+                    ) {
+                        navigator.vibrate(30);
+                    }
+                } catch (vibrateError) {
+                    // Ignore vibration errors
+                }
+    
+                // AUTOMATICALLY GO TO PAGE 3
+                // after the third blessing.
+                if (collectedBlessings.length === 3) {
+                    window.setTimeout(() => {
+                        goToScreen(3);
+                    }, 1200);
+                }
+    
+            } catch (error) {
+                console.error(
+                    'Blessing dispenser error:',
+                    error
+                );
+    
+                blessingCard.classList.remove('drawing');
+    
+                blessingCategory.textContent =
+                    'A blessing is waiting';
+    
+                blessingName.textContent =
+                    'Please try once more';
+    
+                blessingText.textContent =
+                    'Tap the button again to receive your blessing.';
+    
+                blessingSymbol.textContent = '✿';
+    
+            } finally {
+                isDrawing = false;
+    
+                drawButton.disabled =
+                    collectedBlessings.length >= 3;
             }
+    
+        }, 650);
+    }   
+        
+      function updateCollectionUI() {
+    const count = collectedBlessings.length;
 
-            if (
-                typeof navigator.vibrate === 'function'
-            ) {
-                navigator.vibrate(30);
-            }
+    drawCounter.textContent =
+        `${count} of 3 blessings collected`;
 
-        } catch (error) {
-            console.error('Blessing draw failed:', error);
+    collectedDots.forEach((dot, index) => {
+        dot.classList.toggle(
+            'filled',
+            index < count
+        );
+    });
 
-        } finally {
-            /* This always runs, even if another part fails */
-            isDrawing = false;
+    if (count === 0) {
+        drawButton.textContent =
+            'Receive a Blessing';
 
-            drawButton.disabled =
-                collectedBlessings.length >= 3;
-        }
+        drawButton.disabled = false;
 
-    }, 500);
+        finalPageButton.classList.add('hidden');
+    }
+
+    else if (count === 1) {
+        drawButton.textContent =
+            'Receive Your Second Blessing';
+
+        drawButton.disabled = false;
+    }
+
+    else if (count === 2) {
+        drawButton.textContent =
+            'Receive Your Final Blessing';
+
+        drawButton.disabled = false;
+    }
+
+    else {
+        drawButton.textContent =
+            'Your Three Blessings Are Ready';
+
+        drawButton.disabled = true;
+
+        // Keep this visible as a fallback,
+        // although automatic navigation will occur.
+        finalPageButton.classList.remove('hidden');
+    }
 }
-        function updateCollectionUI() {
-            const count = collectedBlessings.length;
-            drawCounter.textContent = `${count} of 3 blessings collected`;
-            collectedDots.forEach((dot, index) => dot.classList.toggle('filled', index < count));
-
-            if (count < 3) {
-                drawButton.textContent = count === 0 ? 'Receive a Blessing' : 'Draw Another Blessing';
-            } else {
-                drawButton.textContent = 'Three Blessings Collected';
-                finalPageButton.classList.remove('hidden');
-            }
-        }
 
         function renderFinalBlessings() {
             finalBlessings.innerHTML = '';
@@ -381,9 +450,15 @@
             }
         }
 
-        function createCelebrationBurst(x, y, count = 12) {
-            const layer = document.getElementById('celebrationLayer');
-            const symbols = ['✿', '✦', '•', '♡'];
+function createCelebrationBurst(x, y, count = 12) {
+    const layer =
+        document.getElementById('celebrationLayer');
+
+    // Never allow a missing effects layer
+    // to break the actual site.
+    if (!layer) return;
+
+    const symbols = ['✿', '✦', '•', '♡'];
 
             for (let i = 0; i < count; i++) {
                 const piece = document.createElement('span');
