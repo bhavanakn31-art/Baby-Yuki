@@ -39,6 +39,7 @@ body {
     position: relative;
     font-family: 'Montserrat', sans-serif;
     color: var(--text);
+    isolation: isolate;
     background:
         radial-gradient(circle at 20% 12%, rgba(243, 166, 185, 0.17), transparent 24rem),
         radial-gradient(circle at 80% 15%, rgba(107, 145, 189, 0.15), transparent 24rem),
@@ -97,7 +98,9 @@ button { -webkit-tap-highlight-color: transparent; }
     width: 340px;
     height: 210px;
     pointer-events: none;
-    z-index: 2;
+
+    /* Sakura branches are foreground scenery */
+    z-index: 40;
 }
 .canopy-left { left: -55px; }
 .canopy-right { right: -55px; transform: scaleX(-1); }
@@ -132,8 +135,18 @@ button { -webkit-tap-highlight-color: transparent; }
     pointer-events: none;
     overflow: hidden;
 }
-.sakura-container { z-index: 3; }
-.celebration-layer { z-index: 30; }
+
+/* Card = 20
+   Tree = 40
+   Falling petals = 60
+   Celebration = 70 */
+.sakura-container {
+    z-index: 60;
+}
+
+.celebration-layer {
+    z-index: 70;
+}
 .petal {
     position: absolute;
     top: -30px;
@@ -149,18 +162,21 @@ button { -webkit-tap-highlight-color: transparent; }
     10% { opacity: 0.78; }
     100% { transform: translate3d(var(--drift), 110vh, 0) rotate(520deg); opacity: 0.18; }
 }
-
 .card {
     position: relative;
-    z-index: 6;
+    z-index: 20;
     width: min(94vw, 720px);
     min-height: 620px;
     padding: 46px 48px 42px;
     border: 1px solid var(--border);
     border-radius: 30px;
     background: var(--surface);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 24px 70px var(--shadow), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+
+    /* Do not use backdrop-filter here.
+       It can create its own compositing layer on iPhone Safari. */
+    box-shadow: 0 24px 70px var(--shadow),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset;
+
     text-align: center;
 }
 .card::before,
