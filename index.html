@@ -80,13 +80,19 @@
                 <div class="dispenser-top" aria-hidden="true">
                     <span class="dispenser-flower">✿</span>
                 </div>
-
-                <div class="blessing-card idle" id="blessingCard" aria-live="polite">
-                    <div class="blessing-symbol" id="blessingSymbol" aria-hidden="true">✦</div>
-                    <div class="blessing-category" id="blessingCategory">Your blessing awaits</div>
-                    
-                    <p id="blessingText">A wish of love, health, happiness, and possibility is waiting to be discovered.</p>
+            <div class="blessing-card idle" id="blessingCard" aria-live="polite">
+                <div class="blessing-symbol" id="blessingSymbol" aria-hidden="true">✦</div>
+            
+                <div class="blessing-category" id="blessingCategory">
+                    Your blessing awaits
                 </div>
+            
+                <h3 class="blessing-name" id="blessingName"></h3>
+            
+                <p id="blessingText">
+                    A wish of love, health, happiness, and possibility is waiting to be discovered.
+                </p>
+            </div>
 
                 <button class="btn btn-primary" id="drawButton" type="button" onclick="drawBlessing()">
                     Receive a Blessing
@@ -216,22 +222,31 @@
         }
 
      function drawBlessing() {
-        if (isDrawing || collectedBlessings.length >= 3) return;
-    
+    if (isDrawing || collectedBlessings.length >= 3) return;
+
+    try {
         isDrawing = true;
         drawButton.disabled = true;
-    
+
         blessingCard.classList.remove('reveal');
         blessingCard.classList.add('drawing');
-    
+
         blessingCategory.textContent = 'Choosing a blessing…';
         blessingName.textContent = '✿ ✿ ✿';
         blessingText.textContent =
             'A little wish is finding its way to Yuki-chan.';
         blessingSymbol.textContent = '✦';
-    
-        window.setTimeout(() => {
-            try {
+
+    } catch (error) {
+        console.error('Could not start blessing:', error);
+
+        isDrawing = false;
+        drawButton.disabled = false;
+        return;
+    }
+
+    window.setTimeout(() => {
+        try {
                 // Safety: refill the pool if necessary
                 if (remainingBlessings.length === 0) {
                     remainingBlessings = [...blessings];
