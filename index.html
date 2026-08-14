@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f7eef2">
     <title>Yuki-chan's Blessings</title>
-    <link id="themeStylesheet" rel="stylesheet" href="style-sakura-sky.css">
+    <link rel="stylesheet" href="style-sakura-sky.css">
 </head>
 <body>
     <div class="page-glow page-glow-left" aria-hidden="true"></div>
@@ -36,15 +36,6 @@
     <div class="sakura-container" id="sakura" aria-hidden="true"></div>
     <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
 
-    <div class="theme-picker">
-        <label for="themeSelect">Palette</label>
-        <select id="themeSelect" aria-label="Choose a color palette">
-            <option value="style-sakura-sky.css">Sakura Sky · Pink + Blue</option>
-            <option value="style-sage-garden.css">Sage Garden · Neutral Green</option>
-            <option value="style-champagne.css">Warm Champagne · Neutral Gold</option>
-        </select>
-    </div>
-
     <main class="card" aria-label="Yuki-chan blessing dispenser">
         <div class="screen-progress" aria-label="Three blessing pages">
             <span class="progress-dot active" data-page="1">1</span>
@@ -74,7 +65,7 @@
             </div>
 
             <button class="btn btn-primary" type="button" onclick="goToScreen(2)">
-                Open the Blessings Jar <span aria-hidden="true">›</span>
+                Open the Blessing Dispenser <span aria-hidden="true">›</span>
             </button>
         </section>
 
@@ -83,7 +74,7 @@
             <span class="eyebrow">祝福 · Shukufuku</span>
             <h2 id="blessingsTitle">Blessings for Yuki-chan</h2>
             <p class="intro-copy">
-                Draw three blessings for the little one.
+                Draw three blessings for the little one. Each wish is chosen at random and will be saved for the final page.
             </p>
 
             <div class="draw-counter" id="drawCounter">0 of 3 blessings collected</div>
@@ -96,7 +87,7 @@
                 <div class="blessing-card idle" id="blessingCard" aria-live="polite">
                     <div class="blessing-symbol" id="blessingSymbol" aria-hidden="true">✦</div>
                     <div class="blessing-category" id="blessingCategory">Your blessing awaits</div>
-                   
+                    <h3 id="blessingName">Tap the button below</h3>
                     <p id="blessingText">A wish of love, health, happiness, and possibility is waiting to be discovered.</p>
                 </div>
 
@@ -124,7 +115,7 @@
             <div class="ornament" aria-hidden="true"><span></span>✿<span></span></div>
 
             <p class="final-intro">
-                You are already so loved, celebrated, and wrapped in warm wishes before we even meet you.
+                You are already so loved, so celebrated, and surrounded by beautiful hopes before we even meet you.
             </p>
 
             <div class="final-blessings" id="finalBlessings" aria-live="polite"></div>
@@ -191,8 +182,6 @@
             { name: 'Meaningful Success', category: '成功 · Success', symbol: '◆', text: 'May success mean more than achievement—may it include purpose, balance, good people, and a life you enjoy living.' }
         ];
 
-        const themeSelect = document.getElementById('themeSelect');
-        const themeStylesheet = document.getElementById('themeStylesheet');
         const blessingCard = document.getElementById('blessingCard');
         const blessingCategory = document.getElementById('blessingCategory');
         const blessingName = document.getElementById('blessingName');
@@ -314,7 +303,7 @@
 
         function createPetals() {
             const sakuraContainer = document.getElementById('sakura');
-            const petalCount = window.matchMedia('(max-width: 600px)').matches ? 14 : 24;
+            const petalCount = 22;
 
             for (let i = 0; i < petalCount; i++) {
                 const petal = document.createElement('span');
@@ -348,23 +337,6 @@
                 setTimeout(() => piece.remove(), 1400);
             }
         }
-
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('yuki-blessing-theme');
-            const validThemes = Array.from(themeSelect.options).map(option => option.value);
-            if (savedTheme && validThemes.includes(savedTheme)) {
-                themeStylesheet.href = savedTheme;
-                themeSelect.value = savedTheme;
-            }
-        }
-
-        themeSelect.addEventListener('change', event => {
-            const selectedTheme = event.target.value;
-            themeStylesheet.href = selectedTheme;
-            localStorage.setItem('yuki-blessing-theme', selectedTheme);
-        });
-
-        loadTheme();
         createPetals();
         updateCollectionUI();
     </script>
